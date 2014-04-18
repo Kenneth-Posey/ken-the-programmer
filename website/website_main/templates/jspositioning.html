@@ -1,0 +1,297 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Pseudoisometric positioning</title>
+    <style type="text/css">
+        #container {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            margin: 0px;
+        }
+
+        .rail {
+            width: 1500px;
+            height: 60px;
+            float: left;
+        }
+
+        .image {
+            width: 30px;
+            height: 30px;
+            margin: 15px;
+            display: inline;
+            z-index: 100;
+        }
+
+        .blank-image {
+            display: inline-block;
+        }
+
+    </style>
+        
+    {% include "./css.html" %}        
+    {% include "./javascript.html" %}
+    
+    <!-- @* <reference path="/static/javascript/jquery-1.9.1.js" />*@ -->
+    <!-- @* <reference path="/static/javascript/library.js" />*@ -->
+    <!-- @* <reference path="/static/javascript/jquery.jsPlumb-1.3.16-all.js" />*@ -->
+
+    <script>
+        function imageAdderData(){
+            this.positionX = 0;
+            this.positionY = 0,
+            this.divId = "";
+        };
+
+        var addSingleImage = function(imageAdderData){
+
+        };
+
+        function region() {
+            this.positionX = 0;
+            this.positionY = 0;
+            this.regionWidth = 0;
+            this.regionHeight = 0;
+            this.spacing = 0;
+            this.containerDiv = '';
+        };
+
+        var emptyImageHolder = $("<div></div>");
+        emptyImageHolder.attr('class', 'image blank-image');
+
+        var emptyImageHtml = emptyImageHolder.wrap('<p>').parent().html();
+
+        var addImageToRegion = function (image, region) {
+            region.containerDiv = $('#container');
+
+            region.containerDiv.width(region.regionWidth);
+            region.containerDiv.height(region.regionHeight);
+
+            var imageHtml = image.clone().wrap('<p>').parent().html();
+            
+            imageHtml = imageHtml.replace('id="preload-image"', '');
+
+            for (var i = 0; i < (region.regionHeight / 60); i++) {
+
+                var rail = $('<div class="rail"></div>');
+                rail.attr('id', 'rail' + i);
+
+                var odd = i % 2;
+                if (odd == 1) {
+                    rail.css('padding-left', '30px');
+                }
+
+                for (var j = 0; j < (region.regionWidth / 60) ; j++) {
+
+                    var imageChance = Math.random();
+                    var randomId = RandomTextGenerator(6);
+
+                    if (imageChance < 0.4) {
+
+                        var newImage = $(imageHtml);
+                        newImage.css('display', 'inline-block');
+                        newImage.attr('id', randomId);
+                        newImage.attr('class', 'image');
+                        
+                        var newImageHtml = newImage.clone().wrap('<p>').parent().html();
+
+                        rail.append(newImageHtml);
+                    } else {
+
+                        var newImage = $(emptyImageHtml);
+                        newImage.attr('id', randomId);
+
+                        var newImageHtml = newImage.clone().wrap('<p>').parent().html();
+
+                        rail.append(newImageHtml);
+                    }
+                }
+                var railHtml = rail.clone().wrap('<p>').parent().html();
+
+                region.containerDiv.append(railHtml);
+            }
+        };
+
+    </script>
+</head>
+<body>
+    <img src="/static/images/25px-circle.png" id="preload-image"/>
+    <div id="container">
+    </div>
+
+    <script>
+        (function($) {
+            $(document).ready(function() {
+                
+                testRegion = new region();
+                testRegion.positionX = 15;
+                testRegion.positionY = 15;
+                testRegion.regionHeight = 600;
+                testRegion.regionWidth = 1500;
+                testRegion.spacing = 25;
+
+                var preloadedImage = $('#preload-image');
+                preloadedImage.css('display', 'none');
+
+                addImageToRegion(preloadedImage, testRegion);
+                var dynamicAnchors = [[0.2, 0, 0, -1], [1, 0.2, 1, 0], [0.8, 1, 0, 1], [0, 0.8, -1, 0]];
+
+                var firstInstance = jsPlumb.getInstance();
+                firstInstance.importDefaults({
+                    Connector: ["Flowchart", { sub: 0 }],
+                    Anchor: [[0.2, 0, 0, -1], [1, 0.2, 1, 0], [0.8, 1, 0, 1], [0, 0.8, -1, 0]],
+                    Endpoints: ["Blank"],
+                    ConnectorZIndex: 5
+                });
+
+                jsPlumb.setRenderMode(jsPlumb.SVG);
+
+                jsPlumb.registerConnectionTypes({
+                    "greenline": {
+                        paintStyle: { strokeStyle: "lime", lineWidth: 2 }
+                    }
+                });
+
+                jsPlumb.registerEndpointTypes({
+                    "greenline": {
+                        paintStyle: { strokeStyle: "lime" }
+                    }
+                });
+
+
+                var imageList = $('.image');
+                var positionArray = new Array();
+
+                for (var i = 0; i < 25; i++) {
+                    positionArray[i] = new Array();
+                }
+
+                imageList.each(function (index) {
+                    var image = $(imageList[index]);
+                    var imagePosition = image.position();                    
+
+                    var imagePositionTop = imagePosition.top;
+                    var imagePositionLeft = imagePosition.left;
+                    var simpleTop = imagePositionTop / 60;
+                    var simpleLeft = imagePositionLeft / 30;
+
+                    if (simpleTop % 2 == 1) {
+                        simpleLeft += 1;
+                    }
+
+                    var isBlankImage = image.attr('class').contains('blank');
+
+                    if (isBlankImage) {
+                        positionArray[simpleTop][simpleLeft] = 0 + ',' + image.attr('id');
+                    } else {
+                        positionArray[simpleTop][simpleLeft] = 1 + ',' + image.attr('id');
+                    }
+                    console.log(image.attr('id') + ' - ' + simpleTop + ',' + simpleLeft);
+                });
+
+                imageList.each(function (index) {
+
+                    var image = $(imageList[index]);
+                    var imageId = image.attr('id');
+                    var imagePosition = image.position();
+
+                    var imagePositionTop = imagePosition.top;
+                    var imagePositionLeft = imagePosition.left;
+                    var simpleTop = imagePositionTop / 60;
+                    var simpleLeft = imagePositionLeft / 30;
+
+                    if (simpleTop % 2 == 1) {
+                        simpleLeft += 1;
+                    }
+
+                    //we don't want to do all of this for blanks
+                    var isBlankImage = image.attr('class').indexOf('blank') >= 0;
+                    if (isBlankImage != 1) {
+                        var neighbors = new Array(new Array(), new Array(), new Array(), new Array(), new Array());
+
+                        /*
+                        //top row
+                        try {
+                            neighbors[0][0] = positionArray[simpleTop - 2][simpleLeft - 2]
+                        } catch (e) {}
+                        try {
+                            neighbors[0][1] = positionArray[simpleTop - 2][simpleLeft + 2]
+                        } catch (e) {}
+                        //top middle row
+                        try {
+                            neighbors[1][0] = positionArray[simpleTop - 1][simpleLeft - 1]
+                        } catch (e) {}
+                            try {
+                            neighbors[1][1] = positionArray[simpleTop - 1][simpleLeft + 1]
+                        } catch (e) { }
+
+                        //middle row
+                        try {
+                            neighbors[2][0] = positionArray[simpleTop][simpleLeft - 4]
+                        } catch (e) {}
+                            
+                        try {
+                            neighbors[2][1] = positionArray[simpleTop][simpleLeft - 2]
+                        } catch (e) {}
+                                
+                        */
+                        try {
+                            neighbors[2][2] = positionArray[simpleTop][simpleLeft + 2]
+                        } catch (e) {}
+                                    
+                        try {
+                            neighbors[2][3] = positionArray[simpleTop][simpleLeft + 4]
+                        } catch (e) {}
+
+                        //bottom middle row
+                                        
+                        try {
+                            neighbors[3][0] = positionArray[simpleTop + 1][simpleLeft - 1]
+                        } catch (e) {}
+                                            
+                        try {
+                            neighbors[3][1] = positionArray[simpleTop + 1][simpleLeft + 1]
+                        } catch (e) {}
+
+                        //bottom row
+                                                
+                        try {
+                            neighbors[4][0] = positionArray[simpleTop + 2][simpleLeft - 2]
+                        } catch (e) {}
+                                                    
+                        try {
+                            neighbors[4][1] = positionArray[simpleTop + 2][simpleLeft + 2]
+                        } catch (e) { }
+
+                        for (var i = 0; i < neighbors.length; i++) {
+                            try {
+                                for (var j = 0; j < neighbors[i].length; j++) {
+                                    try {
+                                        if (neighbors[i][j].contains('1,')) {
+                                            try {
+                                                var targetId = neighbors[i][j].split(',')[1];
+                                                firstInstance.connect({
+                                                    source: imageId,
+                                                    target: targetId,
+                                                    paintStyle: { lineWidth: 2, strokeStyle: 'rgb(0,255,0)' },
+                                                    endpoint: ["Blank"],
+                                                    Anchors: ["AutoDefault"],
+                                                });
+                                            } catch (e) { }
+                                        }
+                                    } catch (e) { }
+                                }
+                            } catch (e) { }
+                        }
+                    }
+                });
+
+                var breakhere = '';
+            });
+        })(jQuery);
+    </script>
+</body>
+</html>

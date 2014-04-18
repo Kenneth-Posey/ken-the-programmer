@@ -1,0 +1,272 @@
+<html>
+<head>
+    <title>Digital Rain - Matrix Rain - Geek Rain</title>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.0/themes/base/jquery-ui.css" />
+    <link rel="stylesheet" href="/static/javascript/jquery-ui-1.10.0.custom/css/trontastic/jquery-ui-1.10.0.custom.min.css" />
+    
+    <style>
+        body {
+            background-color: black;
+        }
+          
+        div {
+            position:relative;
+        }
+          
+        .container {
+            position: absolute;
+            float: left;
+        }
+          
+        .glyph {
+            position: relative;
+            height: 30px;
+            width: 20px;
+            clear:both;
+        }
+          
+        .block {
+            position: absolute;
+        }          
+        
+        .slider {
+            position: absolute;
+            float: left;
+            top: 0px;
+            left: 0px;
+        }
+    </style>
+    
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.0/jquery-ui.js"></script>
+    <script src="/static/javascript/jquery.spritely-0.1.js"></script>
+        
+    <script src="/static/javascript/library.js"></script>
+    
+    <script>
+        var options = {
+            quantity : 10,
+            minSpeed : 3,
+            maxSpeed : 10,
+            minLength : 5,
+            maxLength : 10
+        }
+        
+        var InitializeStreams = function(userOptions) {
+            //var containerWidth = 500;
+            //var containerHeight = 200;
+            //var topX = 120;
+            //var topY = 120;
+            
+            jQuery.extend(options, userOptions)
+            
+            var containerWidth = window.innerWidth - 25;
+            var containerHeight = window.innerHeight - 50;
+            var topX = 0;
+            var topY = 0;
+            
+            var positioning = {
+                width : containerWidth,
+                height : containerHeight,
+                X : topX,
+                Y : topY
+            }
+            
+            var container = $('#container');
+            
+            container.html('');
+            
+            container.css("width", positioning.width);
+            container.css("height", positioning.height);
+            container.css("margin-top", positioning.X);
+            container.css("margin-left", positioning.Y);
+            container.css("overflow", "hidden");
+            
+            for ( var i = 0; i < options.quantity; i++ ) {
+                var blockId = RandomIdGenerator(6);
+                var blockName = "block" + blockId;
+                Generate(blockName, options);
+                Position(blockName, positioning, options);
+                Animate(blockName, positioning, options);
+            }
+        };
+        
+        var Generate = function(blockId, options) {
+            
+            var minLength = options.minLength;
+            var maxLength = options.maxLength - minLength
+            
+            var container = $('#container');
+            container.append('<div class="' + blockId + ' block"></div>');
+            
+            var randomLength = Math.floor((Math.random() * maxLength + 1) + minLength);
+            for ( var i=0; i < randomLength; i++ ) {
+            
+                var divId = RandomIdGenerator(6);
+                var backgroundNumber = Math.floor(Math.random() * 9 + 1);
+                var backgroundUrl = "/static/images/green-image" + backgroundNumber + ".png";
+                var backgroundUrlStyle = 'style="background:url(' + backgroundUrl + ')"';
+                var divText = '<div id="' + divId + '" class="glyph" ' + backgroundUrlStyle + '></div>';
+                
+                $('.' + blockId).append(divText);
+                
+                var randomFps = Math.floor(Math.random() * 7 + 1);
+                
+                var glyph = $("#" + divId);
+                glyph.sprite({fps: randomFps, no_of_frames: 15}); 
+                
+                if (i < 5 && randomLength < 10) {
+                    glyph.css("opacity", 0.1 + (0.2 * i));
+                } else if (i < 10 && randomLength >= 10) {
+                    glyph.css("opacity", 0.1 + (0.1 * i));
+                }
+            }
+        };
+                
+        var Animate = function(blockId, positioning, options) {
+        
+            var minSpeed = options.minSpeed * 1000;
+            var maxSpeed = options.maxSpeed * 1000 - minSpeed;
+            
+            var selectBlockId = "." + blockId;
+            var firstBlockId = selectBlockId + ":first";
+            var hookedBlockIds = selectBlockId + ":gt(0)";    
+            var durationTime = Math.floor((Math.random() * maxSpeed + 1) + minSpeed);
+            
+            $(firstBlockId).animate({
+              top: positioning.height
+            }, {
+              duration: durationTime,
+              easing: "linear",
+              complete: function() {
+                Position(blockId, positioning, options);        
+                Animate(blockId, positioning, options);
+              }
+            });            
+        };
+        
+        var Position = function(blockId, positioning, options) {
+            var selectBlockId = "." + blockId;
+            
+            //Keeps the streams +/- 30 px from the inside window edges
+            var innerSpace = positioning.width - 120;
+            //Calculates the available "rails" for the streams to travel on
+            var rails = Math.floor((innerSpace - (innerSpace % 20)) / 20);
+            //Picks a rail for the stream
+            var leftMarginRail = Math.floor(Math.random() * rails + 1);    
+            //Ensures that the streams will align to some multiple of 20 (glyph width)
+            var leftMargin = leftMarginRail * 20;
+            
+            var offset = options.maxLength * 30;
+            var offsetString = "-" + offset + "px";
+            
+            $(selectBlockId).css("left", leftMargin);
+            $(selectBlockId).css("top", offsetString); //Streams are all <500px tall
+        };
+        
+    </script>
+  </head>
+<body>
+
+    <img src="/static/images/image0.png" style="display:none" />
+    <img src="/static/images/image1.png" style="display:none" />
+    <img src="/static/images/image2.png" style="display:none" />
+    <img src="/static/images/image3.png" style="display:none" />
+    <img src="/static/images/image4.png" style="display:none" />
+    <img src="/static/images/image5.png" style="display:none" />
+    <img src="/static/images/image6.png" style="display:none" />
+    <img src="/static/images/image7.png" style="display:none" />
+    <img src="/static/images/image8.png" style="display:none" />
+    <img src="/static/images/image9.png" style="display:none" />
+    
+    <div id="controls">
+        <div id="speed"></div>
+        <div id="quantity"></div>    
+        <div id="length"></div>
+    </div>
+    
+    <div id="container"></div>
+    
+    <script>
+        (function($) {
+            $(document).ready(function() {
+                
+                var controlsContainer = $( "#controls" );
+                var quantitySlider = $( "#quantity" );                
+                var speedSlider = $( "#speed" );
+                var lengthSlider = $( "#length" );
+                
+                speedSlider.slider({
+                    min : 1,
+                    max : 30,
+                    step : 1,
+                    value : 12,
+                    orientation : "horizontal",
+                    change : function( event, ui) {
+                        InitializeStreams({
+                            maxSpeed : ui.value
+                        });
+                    }
+                });
+                
+                quantitySlider.slider({
+                    min : 5,
+                    max : 75,
+                    step : 5,
+                    value : 15,
+                    orientation : "horizontal",
+                    change : function( event, ui) {
+                        InitializeStreams({
+                            quantity : ui.value
+                        });
+                    }
+                });
+                                
+                lengthSlider.slider({
+                    min : 8,
+                    max : 30,
+                    step : 1,
+                    value : 12,
+                    orientation : "horizontal",
+                    change : function( event, ui) {
+                        InitializeStreams({
+                            maxLength : ui.value
+                        });
+                    }
+                });
+                
+                controlsContainer.css("width", 900);
+                controlsContainer.css("height", 25);
+                controlsContainer.css("margin-left", (window.innerWidth - 900) / 2);
+                
+                speedSlider.css("float", "left");
+                quantitySlider.css("float", "left");
+                lengthSlider.css("float", "left");
+                
+                speedSlider.css("width", 250);
+                quantitySlider.css("width", 250);
+                lengthSlider.css("width", 250);
+                
+                speedSlider.css("margin-left", 0);
+                quantitySlider.css("margin-left", 50);
+                lengthSlider.css("margin-left", 50);
+                
+                InitializeStreams(options);
+            });
+        })(jQuery);
+    </script>
+    <script type="text/javascript">
+    
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-38346584-1']);
+        _gaq.push(['_trackPageview']);
+       
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+    
+    </script>
+</body>
+</html>

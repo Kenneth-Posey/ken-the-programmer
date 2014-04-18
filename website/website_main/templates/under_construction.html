@@ -1,0 +1,71 @@
+{% extends "skeleton.html" %}
+{% block body %}
+
+        <div style="line-height: 400px; font-size:24px; text-align: center; width: 700px; margin-left: 100px;" class="matrix-font">
+            <span data-original="U" class="under-construction">U</span>
+            <span data-original="N" class="under-construction">N</span>
+            <span data-original="D" class="under-construction">D</span>
+            <span data-original="E" class="under-construction">E</span>
+            <span data-original="R" class="under-construction">R</span>
+            <span>&nbsp;</span>
+            <span data-original="C" class="under-construction">C</span>
+            <span data-original="O" class="under-construction">O</span>
+            <span data-original="N" class="under-construction">N</span>
+            <span data-original="S" class="under-construction">S</span>
+            <span data-original="T" class="under-construction">T</span>
+            <span data-original="R" class="under-construction">R</span>
+            <span data-original="U" class="under-construction">U</span>
+            <span data-original="C" class="under-construction">C</span>
+            <span data-original="T" class="under-construction">T</span>
+            <span data-original="I" class="under-construction">I</span>
+            <span data-original="O" class="under-construction">O</span>
+            <span data-original="N" class="under-construction">N</span>
+        </div>
+        <script type="text/javascript">
+
+            var state = false;
+            var letterList = $('.under-construction');
+            var listLength = letterList.length;
+
+            var letterChanger = function (state, currentObject) {
+                var currentLetter = currentObject.innerText;
+                var originalLetter = currentObject.attributes.getNamedItem("data-original").value;
+
+                if (!state) {
+                    var randomLetter = RandomTextGenerator(1);
+                    currentObject.innerText = randomLetter;
+                } else {
+                    currentObject.innerText = originalLetter;
+                }
+            };
+
+            var textChanger = function (state) {
+                for (var i = 0; i < listLength; i++) {
+                    var currentObject = letterList[i];
+                    var randomId = RandomTextGenerator(6);
+                    var randomTime = Math.floor((Math.random() * 2000) + 3000);
+                    var currentLetter = currentObject.innerText;
+
+                    if (!currentObject.id) {
+                        currentObject.id = randomId;
+                    }
+
+                    setTimeout(letterChanger, randomTime, state, currentObject);
+                }
+
+                if (state) {
+                    state = false;
+                } else {
+                    state = true;
+                }
+
+                setTimeout(textChanger, 5000, state);
+            };
+
+            $(document).ready(function () {
+
+                setTimeout(textChanger, 1000, state);
+
+            });
+        </script>
+{% endblock %}

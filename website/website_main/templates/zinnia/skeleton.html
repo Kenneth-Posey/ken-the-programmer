@@ -1,0 +1,286 @@
+﻿{% load i18n %}
+{% load url from future %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xml:lang="{{ LANGUAGE_CODE }}" lang="{{ LANGUAGE_CODE }}" version="-//W3C//DTD XHTML 1.1//EN" xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>{% block title %}{% endblock %} - Pleco-is-Bored.com</title>
+        <meta name="description" content="{% block meta-description %}A page about programming, philosophy, gaming and life on pleco-is-bored.com.{% endblock %}" />
+        <meta name="keywords" content="{% block meta-keywords %}django, blog, zinnia{% endblock %}" />
+        {% block meta %}{% endblock %}
+        {% block link %}{% endblock %}
+
+        {% include "./css.html" %}        
+        {% include "./javascript.html" %}
+        
+        <!-- @* <reference path="/static/javascript/glyph-stream.js" />                 *@ -->
+        <!-- @* <reference path="/static/javascript/library.js" />                      *@ -->
+        <!-- @* <reference path="/static/javascript/main.js" />                         *@ -->
+
+        <!-- Libraries -->
+        <!-- @* <reference path="/static/javascript/jquery-1.9.1.js" />                 *@ -->
+        <!-- @* <reference path="/static/javascript/jquery.mousewheel.js" />            *@ -->
+
+        <!-- Plugins -->
+        <!-- @* <reference path="/static/javascript/jquery.jquery-scroll.js" />         *@ -->
+        <!-- @* <reference path="/static/javascript/jquery.jscrollpane.js" />           *@ -->
+
+        <script type="text/javascript">
+            // Default stream settings
+            var options = {
+                quantity: 5,
+                minSpeed: 30,
+                maxSpeed: 45,
+                minLength: 6,
+                maxLength: 25,
+                minSpriteSpeed: 500,
+                maxSpriteSpeed: 1200,
+                minSpriteSize: 8,
+                maxSpriteSize: 12
+            }
+        </script>
+        <style type="text/css">            
+            .under-construction {
+                width: 18px; 
+                display: inline-block;
+            }
+        </style>
+    </head>
+    <body class="zinnia default exterior-wrapper">
+        <div class="container interior-wrapper">
+            <div id="start-menu" class="start-menu-item matrix-font" style="text-transform: uppercase; font-size: 20px;">
+                <div id="start-menu-button" class="start-menu-item"> 
+                    <img src="/static/images/start-menu-button.png" alt="Start" />
+                </div>
+                <div id="start-menu-bar">
+                </div>
+                <div id="start-menu-display">
+                    {% block sidebar %}
+                    {% endblock %}
+                </div>
+                <div class="sub-menu-display">
+
+                </div>
+            </div>
+            <div id="content">
+                <div id="content-header" class="matrix-font">
+                    &nbsp;
+                </div>
+                <div id="content-body" class="content-body-class">
+                    <div style="display:none">
+                        {% block content %}
+                            <div class="links">
+                                <h3>{% trans "Useful links" %}</h3>
+                                <ul>
+                                    <li>
+                                    </li>
+                                </ul>
+                            </div>
+                        {% endblock %}
+                    </div>
+                </div>
+                <div id="content-footer">
+                    &nbsp;
+                </div>
+            </div>
+        </div>
+        <div class="matrix-font stream-container" id="left-stream"></div>
+        <div class="matrix-font stream-container" id="right-stream"></div>
+        
+        <script type="text/javascript">
+
+            var letterChanger = function (state, currentObject) {
+                var currentLetter = currentObject.innerText;
+                var originalLetter = currentObject.attributes.getNamedItem("data-original").value;
+
+                if (!state) {
+                    var randomLetter = RandomTextGenerator(1);
+                    currentObject.innerText = randomLetter;
+                } else {
+                    currentObject.innerText = originalLetter;
+                }
+            };
+
+
+            var textChanger = function (state) {
+                var letterList = $('.under-construction');
+                var listLength = letterList.length;
+                for (var i = 0; i < listLength; i++) {
+                    var currentObject = letterList[i];
+                    var randomId = RandomTextGenerator(6);
+                    var randomTime = Math.floor((Math.random() * 2000) + 3000);
+                    var currentLetter = currentObject.innerText;
+
+                    if (!currentObject.id) {
+                        currentObject.id = randomId;
+                    }
+
+                    setTimeout(letterChanger, randomTime, state, currentObject);
+                }
+
+                if (state) {
+                    state = false;
+                } else {
+                    state = true;
+                }
+
+                setTimeout(textChanger, 5000, state);
+            };
+        </script>
+
+        <script type="text/javascript">
+
+            $(document).ready(function () {
+
+                var state = true;
+                var exterior = $(".exterior-wrapper");
+                var interior = $(".interior-wrapper");
+                var leftContainer = $('#left-stream');
+                var rightContainer = $('#right-stream');
+
+                var backgroundSpace = window.innerWidth - leftContainer.width() * 2 - interior.width() - 150;
+                var streamContainerWidth = backgroundSpace / 2;
+                
+                var contentBody = $("#content-body");
+                contentBody.css('height', window.innerHeight - 150);
+
+                leftContainer.css("width", streamContainerWidth + "px");
+                rightContainer.css("width", streamContainerWidth + "px");
+
+                leftContainer.css("margin-left", "25px");
+                rightContainer.css("margin-left", (streamContainerWidth + contentBody.width() + 75) + "px");
+                
+                InitializeStreams(leftContainer, options);
+                InitializeStreams(rightContainer, options);
+
+                var location = document.location.pathname;
+                if (location == '/home/') {
+                    contentBody.empty();
+                    contentBody.append(
+                        '<div style="margin-top: 200px; font-size:24px; text-align: center; width: 700px; margin-left: 100px;" class="matrix-font">' +
+                        '<span data-original="U" class="under-construction">f</span>' +
+                        '<span data-original="N" class="under-construction">a</span>' +
+                        '<span data-original="D" class="under-construction">d</span>' +
+                        '<span data-original="E" class="under-construction">t</span>' +
+                        '<span data-original="R" class="under-construction">y</span>' +
+                        '<span>&nbsp;</span>' +
+                        '<span data-original="C" class="under-construction">e</span>' +
+                        '<span data-original="O" class="under-construction">i</span>' +
+                        '<span data-original="N" class="under-construction">u</span>' +
+                        '<span data-original="S" class="under-construction">o</span>' +
+                        '<span data-original="T" class="under-construction">h</span>' +
+                        '<span data-original="R" class="under-construction">j</span>' +
+                        '<span data-original="U" class="under-construction">n</span>' +
+                        '<span data-original="C" class="under-construction">w</span>' +
+                        '<span data-original="T" class="under-construction">q</span>' +
+                        '<span data-original="I" class="under-construction">p</span>' +
+                        '<span data-original="O" class="under-construction">r</span>' +
+                        '<span data-original="N" class="under-construction">s</span>' +
+                    '</div>'
+                    );
+
+                    setTimeout(textChanger, 1000, state);
+                }
+
+                $('#start-menu-button').bind('click', function () {
+                    var startMenu = $('#start-menu-display');
+                    if (startMenu.css('display') == 'none') {
+                        startMenu.css('display', 'block');
+                    } else {
+                        hideMenus();
+                    }
+
+                    //Stops link navigation
+                    return false;
+                });
+
+                var hideMenus = function () {
+                    var startMenu = $('#start-menu-display');
+                    var subMenu = $('.sub-menu-display');
+                    startMenu.css('display', 'none');
+                    subMenu.css('display', 'none');
+                };
+
+                var windowLocation = '';
+                var showSubMenu = function () {
+                    var subMenu = $('.sub-menu-display');
+
+                    var subMenuContentHtml = $(subMenu.html);
+
+                    var titles = $('.entry-title', subMenuContentHtml);
+
+                    subMenu.empty();
+                    titles.each(function (i) {
+                        //bit of hackage to select the link for easy modification
+                        var entry = $('a', '<span>' + this.innerHTML + '</span>');
+                        entry.attr('class', 'start-menu-link start-menu-item');
+
+                        subMenu.append(entry.wrap('<p>').unwrap());
+                    });
+
+                    var content = $('#content-body');
+                    var entries = $('.start-menu-link', subMenu);
+                    entries.each(function () {
+                        $(this).bind('click', function () {
+                            $('#content-body').empty();
+                            $('#content-header').empty();
+                            content.append('<span style="margin-top: 100px;" class="matrix-font">LOADING</span>');
+                            //content.load(this.href + ' #entry-content-text');
+                            windowLocation = this.href;
+                            $.get(this.href)
+                                .done(function (data) {
+                                    $('#content-body').empty();
+                                    $('#content-header').empty();
+                                    var responseTitle = $('.entry-title', "<p>" + data + "</p>");
+                                    var responseBody = $('.entry-body', "<p>" + data + "</p>");
+
+                                    $('#content-body').append(responseBody);
+                                    $('#content-header').append(responseTitle);
+
+                                    history.pushState({}, '', windowLocation);
+
+                                    var scrollSettings = {
+                                        cursorcolor: '#00ff00',
+                                        autohidemode: false,
+                                        cursorborder: '0px',
+                                        cursorborderradius: '0px'
+                                    };
+
+                                    var wrapper = $('#content-body');
+                                    wrapper.niceScroll(scrollSettings);
+                                });
+
+                            hideMenus();
+                            return false;
+                            });
+                        });
+                    };
+
+                $('.start-menu-link').bind('click', function () {
+
+                    var subMenu = $('.sub-menu-display');
+                    if (subMenu.css('display') == 'none') {
+                        subMenu.css('display', 'block');
+                    }
+                    subMenu.empty();
+                    subMenu.append('Loading...');
+                    subMenu.load(this.href + ' #content-loop', showSubMenu);
+
+                    //Stops link navigation
+                    return false;
+                });
+
+
+                var scrollSettings = {
+                    cursorcolor: '#00ff00',
+                    autohidemode: false,
+                    cursorborder: '0px',
+                    cursorborderradius: '0px'
+                };
+
+                var wrapper = $('#content-body');                
+                wrapper.niceScroll(scrollSettings);
+
+            });
+        </script>
+    </body>
+</html>

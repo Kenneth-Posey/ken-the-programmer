@@ -1,0 +1,104 @@
+{% load i18n %}
+{% load url from future %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+        <title>{% block title %}{% endblock %} {{ title }} - Pleco-Is-Bored.com</title>
+
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <meta http-equiv="cache-control" content="public" />
+        <meta name="robots" content="follow, all" />
+        <meta name="description" content="{% block meta-description %}A page about programming, philosophy, gaming and life on pleco-is-bored.com.{% endblock %}" />
+        <meta name="keywords" content="{% block meta-keywords %}programming, pleco is bored, philosophy, gaming{% endblock %}" />
+        
+        {% block meta %}{% endblock %}
+
+        {% include "./css.html" %}        
+        {% include "./javascript.html" %}
+        <!-- @* <reference path="/static/javascript/jquery-1.9.1.js" />*@ -->
+        <script type="text/javascript">
+            // Default stream settings
+            var options = {
+                quantity : 5,
+                minSpeed : 30,
+                maxSpeed : 45,
+                minLength : 6,
+                maxLength : 25,
+                minSpriteSpeed : 500,
+                maxSpriteSpeed : 1200,
+                minSpriteSize : 8,
+                maxSpriteSize : 12
+            }
+
+        </script>
+        <style type="text/css">            
+            .under-construction {
+                width: 18px; 
+                display: inline-block;
+            }
+        </style>
+    </head>
+    <body>
+        {% autoescape on %}
+        <div class="exterior-wrapper">
+            <div class="matrix-font stream-container" id="left-stream"></div>
+            <div class="matrix-font stream-container" id="right-stream"></div>
+            <div class="interior-wrapper">
+                <div id="header">
+                    {% include "./header.html" %}
+                </div>                
+                <div id="sidebar">
+                    {% include "./sidebar.html" %}
+                </div>                    
+                <div id="content">
+                    <div class="navigation">
+                        {% include "./navigation.html" %}
+                    </div>
+                    {% ifnotequal error "" %}
+                        <div class="error">
+                            {{ error }}
+                        </div>
+                    {% endifnotequal %}
+                    {% block body %}
+                     
+                    {% endblock %}
+                    
+                    <div style="clear:both; display:block;">&nbsp;</div>
+                    <div id="footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endautoescape %}
+        
+        {% include "./google_analytics.html" %}
+        <script type="text/javascript">
+
+            $(document).ready(function () {
+
+                var exterior = $(".exterior-wrapper");
+                var interior = $(".interior-wrapper");
+                var leftContainer = $('#left-stream');
+                var rightContainer = $('#right-stream');
+
+                var backgroundSpace = window.innerWidth - leftContainer.width() * 2 - interior.width() - 150;
+                var streamContainerWidth = backgroundSpace / 2;
+
+                leftContainer.css("width", streamContainerWidth + "px");
+                rightContainer.css("width", streamContainerWidth + "px");
+
+                InitializeStreams(leftContainer, options);
+                InitializeStreams(rightContainer, options);
+                
+                var websiteThumbnails = $('#website-thumbnail');
+                if ( websiteThumbnails.length > 0 ) {
+                    websiteThumbnails.each( function () {
+                        
+                    });
+                }
+
+            });
+        </script>
+    </body>
+</html>
+

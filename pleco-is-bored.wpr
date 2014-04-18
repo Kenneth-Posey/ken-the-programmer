@@ -1,0 +1,47 @@
+#!wing
+#!version=5.0
+##################################################################
+# Wing IDE project file                                          #
+##################################################################
+[project attributes]
+console.toolbox = [{'autosave': False,
+                    'cmd': 'python manage.py syncdb',
+                    'env': ('project',
+                            ['']),
+                    'id': 'cmd-2',
+                    'io_encoding': None,
+                    'key_binding': '',
+                    'line_mode': True,
+                    'pseudo_tty': False,
+                    'pypath': ('project',
+                               path([])),
+                    'raise_panel': True,
+                    'rundir': ('project',
+                               ''),
+                    'title': ''},
+                   {'autosave': False,
+                    'cmd': 'python C:\\Users\\Virus\\Documents\\_current-pro'\
+                           'jects\\pythonanywhere\\website\\manage.py syncdb',
+                    'env': ('project',
+                            ['']),
+                    'id': 'cmd-1',
+                    'io_encoding': None,
+                    'key_binding': '',
+                    'line_mode': True,
+                    'pseudo_tty': False,
+                    'pypath': ('project',
+                               path([])),
+                    'raise_panel': True,
+                    'rundir': ('project',
+                               ''),
+                    'title': ''}]
+proj.directory-list = [{'dirloc': loc('.'),
+                        'excludes': (),
+                        'filter': '*',
+                        'include_hidden': False,
+                        'recursive': True,
+                        'watch_for_changes': True}]
+proj.file-list = [loc('.htaccess')]
+proj.file-type = 'shared'
+proj.home-dir = loc('.')
+proj.main-file = loc('website/manage.py')

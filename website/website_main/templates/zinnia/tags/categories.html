@@ -1,0 +1,10 @@
+{% load i18n %}
+<ul id="start-menu-list">
+    {% for category in categories %}
+        <li class="start-menu-item">
+            <a href="{{ category.get_absolute_url }}" class="start-menu-link"
+                title="{% blocktrans %}Show all entries in {{ category }}{% endblocktrans %}">{{ category }}</a>
+        </li>
+    {% endfor %}
+</ul>
+

@@ -1,5 +1,0 @@
-C:\Users\Virus\Documents\_current-projects\pythonanywhere_plecoisbored\website\bin\website.dll
-C:\Users\Virus\Documents\_current-projects\pythonanywhere_plecoisbored\website\bin\website.pdb
-C:\Users\Virus\Documents\_current-projects\pythonanywhere_plecoisbored\website\obj\Debug\website.csprojResolveAssemblyReference.cache
-C:\Users\Virus\Documents\_current-projects\pythonanywhere_plecoisbored\website\obj\Debug\website.dll
-C:\Users\Virus\Documents\_current-projects\pythonanywhere_plecoisbored\website\obj\Debug\website.pdb

@@ -170,8 +170,33 @@
                     );
 
                     setTimeout(textChanger, 1000, state);
-                }
+                // This is if you navigate to the site without using the menu
+                } else {
+                    $.get(location)
+                        .done(function (data) {
+                            $('#content-body').empty();
+                            $('#content-header').empty();
+                            var responseTitle = $('.entry-title', "<p>" + data + "</p>");
+                            var responseBody = $('.entry-body', "<p>" + data + "</p>");
 
+                            $('#content-body').append(responseBody);
+                            $('#content-header').append(responseTitle);
+
+                            history.pushState({}, '', windowLocation);
+
+                            var scrollSettings = {
+                                cursorcolor: '#00ff00',
+                                autohidemode: false,
+                                cursorborder: '0px',
+                                cursorborderradius: '0px'
+                            };
+
+                            var wrapper = $('#content-body');
+                            wrapper.niceScroll(scrollSettings);
+                        });  
+                }
+                
+                
                 $('#start-menu-button').bind('click', function () {
                     var startMenu = $('#start-menu-display');
                     if (startMenu.css('display') == 'none') {

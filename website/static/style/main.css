@@ -91,6 +91,11 @@
         text-decoration: none;
         color: lime;
     }
+	
+	#home-link {
+        text-decoration: none;
+        color: lime;
+	}
 
     #start-menu-display {
         display: none;

@@ -247,3 +247,60 @@
 	.thumbnail-image a { 
 		text-decoration:none; 
 	} 
+	
+	h1 {
+		border-top-width: 1px;
+		border-top-color: lime;
+		border-top-style: solid;
+		padding-top: 3px;
+		
+		border-bottom-width: 1px;
+		border-bottom-color: lime;
+		border-bottom-style: solid;
+		padding-bottom: 3px;
+		
+		text-align: center;
+		text-transform: uppercase;
+		
+		margin-bottom: 10px;
+		clear:both;
+	}
+	
+	h2 {
+		margin-bottom: 10px;	
+	}
+	
+	.left-h2 {
+		width: 70%;
+		margin: 0 auto;
+		float: left;
+		font-weight: bold;
+	}
+	
+	.right-h2 {
+		width: 30%;
+		margin: 0 auto;
+		float: right;
+	}
+	
+	ul.content-text {
+		font-size: 95%;
+		margin-left: 10px;
+		line-height: 120%;
+		width: 85%;
+	}
+	
+	ul.content-text li {
+		list-style-type: square;
+	}
+	
+	ul.two-column-list {
+		height: 100px;
+	}
+	
+	ul.two-column-list li {
+		list-style-type: square;
+		width: 50%;
+		float: left;
+		display: inline;
+	}
